@@ -1,0 +1,142 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-nunito);
+  --font-body: var(--font-nunito);
+  --font-heading: var(--font-poppins);
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-soft: var(--brand-soft);
+  --color-accent-red: var(--accent-red);
+  --color-accent-red-dark: var(--accent-red-dark);
+  --color-navy: var(--navy);
+  --color-navy-2: var(--navy-2);
+  --color-ice: var(--ice);
+  --color-ink: var(--ink);
+  --color-muted-ink: var(--muted-ink);
+  --color-ring: var(--ring);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.25rem;
+
+  /* TrueFlow brand palette */
+  --brand: #0e5ed8;        /* royal blue, water + trust */
+  --brand-dark: #0a4aa8;   /* hover state */
+  --brand-soft: #e3edfd;   /* pale blue tint */
+  --accent-red: #e8402a;   /* emergency red, CTA */
+  --accent-red-dark: #c93421;
+  --navy: #0b1526;         /* dark sections + footer */
+  --navy-2: #101d33;       /* raised navy panels */
+  --ice: #eef3fb;          /* light section background */
+  --ink: #16202e;          /* headings */
+  --muted-ink: #5d6b80;    /* body text */
+
+  --background: #ffffff;
+  --foreground: var(--ink);
+  --card: #ffffff;
+  --card-foreground: var(--ink);
+  --popover: #ffffff;
+  --popover-foreground: var(--ink);
+  --primary: var(--brand);
+  --primary-foreground: #ffffff;
+  --secondary: var(--ice);
+  --secondary-foreground: var(--ink);
+  --muted: var(--ice);
+  --muted-foreground: var(--muted-ink);
+  --accent: var(--brand-soft);
+  --accent-foreground: var(--brand);
+  --destructive: var(--accent-red);
+  --border: #e2e8f2;
+  --input: #e2e8f2;
+  --ring: #9ec2f5;
+}
+
+.dark {
+  --background: var(--navy);
+  --foreground: #f1f5fb;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Subtle diagonal texture used on light sections, echoes theme background */
+.bg-blueprint {
+  background-color: var(--ice);
+  background-image:
+    linear-gradient(115deg, rgba(14, 94, 216, 0.05) 0%, rgba(14, 94, 216, 0.05) 50%, transparent 50%),
+    radial-gradient(rgba(14, 94, 216, 0.08) 1px, transparent 1px);
+  background-size: 100% 100%, 22px 22px;
+}
+
+/* Dark section with dotted pattern, echoes theme quote + footer areas */
+.bg-navy-dots {
+  background-color: var(--navy);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1.5px, transparent 1.5px);
+  background-size: 26px 26px;
+}
+
+/* Hex pattern for footer */
+.bg-navy-hex {
+  background-color: var(--navy);
+  background-image:
+    linear-gradient(30deg, rgba(255,255,255,0.02) 12%, transparent 12.5%, transparent 87%, rgba(255,255,255,0.02) 87.5%),
+    linear-gradient(150deg, rgba(255,255,255,0.02) 12%, transparent 12.5%, transparent 87%, rgba(255,255,255,0.02) 87.5%);
+  background-size: 42px 74px;
+}
+
+/* skill bar animation */
+@keyframes growBar {
+  from { width: 0; }
+}
+.animate-bar {
+  animation: growBar 1.4s ease-out both;
+}
+
+/* thin scrollbar for long lists */
+.nice-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.nice-scroll::-webkit-scrollbar-thumb {
+  background: #c7d3e6;
+  border-radius: 999px;
+}

@@ -1,0 +1,46 @@
+# dependencies
+node_modules
+/.pnp
+.pnp.*
+
+# next.js
+/.next/
+/out/
+/build
+
+# production
+/coverage
+
+# env files (keep the example, ignore real values)
+.env*
+!.env.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# logs & misc
+.DS_Store
+*.pem
+*.log
+.claude
+.z-ai-config
+local-*
+prompt
+
+# sandbox / workspace only (not part of the website)
+/db
+/scripts
+/examples
+/tests
+/download
+/tool-results
+/agent-ctx
+/mini-services
+/.zscripts
+/worklog.md
+/Caddyfile
+/skills
