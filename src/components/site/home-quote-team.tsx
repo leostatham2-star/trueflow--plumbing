@@ -9,34 +9,54 @@ import {
   Clock,
   Send,
   CheckCircle2,
+  ArrowRight,
+  AlertCircle,
 } from "lucide-react";
-import { BRAND } from "@/lib/site-data";
-
-const SUBJECTS = [
-  "Leak Detection & Repair",
-  "Drain Cleaning",
-  "Water Heater Services",
-  "Faucet & Fixture Installation",
-  "Repiping",
-  "Emergency Plumbing",
-  "Something Else",
-];
+import { BRAND, QUOTE_SUBJECTS } from "@/lib/site-data";
+import { goToRoute } from "./shared";
 
 export function QuoteSection() {
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [senderName, setSenderName] = useState("");
   const [form, setForm] = useState({
     name: "",
     email: "",
     phone: "",
     subject: "",
     message: "",
+    company: "", // honeypot
   });
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSent(true);
-    setForm({ name: "", email: "", phone: "", subject: "", message: "" });
-    setTimeout(() => setSent(false), 6000);
+    if (status === "sending") return;
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          service: form.subject,
+          message: form.message,
+          company: form.company,
+          source: "home quick quote",
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        setSenderName(form.name.trim().split(/\s+/)[0] ?? "friend");
+        setStatus("sent");
+        setForm({ name: "", email: "", phone: "", subject: "", message: "", company: "" });
+        setTimeout(() => setStatus("idle"), 8000);
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
   };
 
   const field =
@@ -147,7 +167,7 @@ export function QuoteSection() {
               <option value="" disabled>
                 Select Subject
               </option>
-              {SUBJECTS.map((s) => (
+              {QUOTE_SUBJECTS.map((s) => (
                 <option key={s} value={s}>
                   {s}
                 </option>
@@ -162,19 +182,45 @@ export function QuoteSection() {
               rows={5}
               className={`${field} sm:col-span-2`}
             />
+            {/* honeypot: hidden from people, irresistible to bots */}
+            <input
+              type="text"
+              name="company"
+              value={form.company}
+              onChange={(e) => setForm({ ...form, company: e.target.value })}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="hidden"
+            />
             <button
               type="submit"
-              className="flex items-center justify-center gap-2 rounded-sm bg-brand px-8 py-4 font-heading text-[13px] font-bold tracking-wider text-white transition hover:bg-brand-dark sm:col-span-2"
+              disabled={status === "sending"}
+              className="flex items-center justify-center gap-2 rounded-sm bg-brand px-8 py-4 font-heading text-[13px] font-bold tracking-wider text-white transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-70 sm:col-span-2"
             >
-              SUBMIT NOW
+              {status === "sending" ? "SENDING..." : "SUBMIT NOW"}
               <Send className="h-4 w-4" />
             </button>
-            {sent && (
+            {status === "sent" && (
               <p className="flex items-center justify-center gap-2 text-[15px] font-semibold text-emerald-600 sm:col-span-2">
                 <CheckCircle2 className="h-5 w-5" />
-                Got it! A real person will call you back within one business hour.
+                Got it, {senderName}! A real person will call you back within one business hour.
               </p>
             )}
+            {status === "error" && (
+              <p className="flex items-center justify-center gap-2 text-[14px] font-semibold text-accent-red sm:col-span-2">
+                <AlertCircle className="h-5 w-5" />
+                That did not go through. Please check your details and try again, or call {BRAND.phone}.
+              </p>
+            )}
+            <button
+              type="button"
+              onClick={() => goToRoute("quote")}
+              className="flex items-center justify-center gap-2 text-[14px] font-semibold text-brand transition hover:text-accent-red sm:col-span-2"
+            >
+              Planning a bigger project? Use the full quote form
+              <ArrowRight className="h-4 w-4" />
+            </button>
           </form>
 
           <div className="mt-6 flex items-center justify-center gap-6 border-t border-border pt-5 text-[13px] text-muted-ink">
@@ -297,9 +343,12 @@ export function CtaBanner() {
           >
             <Phone className="h-4 w-4" /> {BRAND.phone}
           </a>
-          <span className="flex items-center gap-2 rounded-sm border border-white/20 px-8 py-4 font-heading text-[13px] font-bold tracking-wider text-white/80">
-            <CalendarCheck className="h-4 w-4 text-brand" /> Mon to Sat, {BRAND.hours}
-          </span>
+          <button
+            onClick={() => goToRoute("quote")}
+            className="flex items-center gap-2 rounded-sm bg-accent-red px-8 py-4 font-heading text-[13px] font-bold tracking-wider text-white transition hover:bg-accent-red-dark"
+          >
+            <CalendarCheck className="h-4 w-4" /> REQUEST A QUOTE
+          </button>
         </div>
       </div>
     </section>

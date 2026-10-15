@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { BadgeCheck, Users, Wrench, Cog } from "lucide-react";
 import { IMAGES } from "@/lib/site-data";
-import { SectionHeading } from "./shared";
+import { SectionHeading, goToRoute } from "./shared";
 
 type Props = {
   onNavigate: (route: string) => void;
@@ -221,9 +221,10 @@ export function ContactStrip() {
     },
     {
       bg: "bg-brand",
-      title: "ANY QUESTION? EMAIL US!",
-      value: "help@trueflowplumbing.com",
-      href: "mailto:help@trueflowplumbing.com",
+      title: "NEED A WRITTEN PRICE?",
+      value: "Request a Quote",
+      href: "#/quote",
+      quote: true,
     },
   ];
   return (
@@ -242,7 +243,19 @@ export function ContactStrip() {
           </div>
         );
         return item.href ? (
-          <a key={item.title} href={item.href} className="group block">
+          <a
+            key={item.title}
+            href={item.href}
+            onClick={
+              item.quote
+                ? (e) => {
+                    e.preventDefault();
+                    goToRoute("quote");
+                  }
+                : undefined
+            }
+            className="group block"
+          >
             {inner}
           </a>
         ) : (

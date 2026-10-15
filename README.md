@@ -6,9 +6,14 @@ customer journey: hero with rotating offers, about, services, quote request,
 team, testimonials, working process, blog highlights and a contact page with a
 working form and FAQ.
 
-Built as a single Next.js application. The four pages (Home, About, Services,
-Contact) live on one route and switch through lightweight hash navigation, which
-keeps hosting simple and page transitions instant.
+Built as a single Next.js application. The five pages (Home, About, Services,
+Contact, Request a Quote) live on one route and switch through lightweight hash
+navigation, which keeps hosting simple and page transitions instant.
+
+The request for quote form posts to `/api/quote`, which validates the payload
+and stores the lead through Prisma when a database is configured. The form
+degrades gracefully on hosts without a database, so the visitor experience is
+identical either way.
 
 ## Tech Stack
 

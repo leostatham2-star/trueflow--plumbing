@@ -116,10 +116,10 @@ export function SiteHeader({ route, onNavigate }: Props) {
               </span>
             </a>
             <button
-              onClick={() => go("contact")}
+              onClick={() => go("quote")}
               className="hidden rounded-sm bg-accent-red px-6 py-3 font-heading text-[13px] font-bold tracking-wide text-white transition hover:bg-accent-red-dark sm:block"
             >
-              GET APPOINTMENT
+              REQUEST A QUOTE
             </button>
             <button
               className="flex h-11 w-11 items-center justify-center rounded-sm border border-border text-ink lg:hidden"
@@ -158,9 +158,15 @@ export function SiteHeader({ route, onNavigate }: Props) {
                     {item.label}
                   </button>
                 ))}
+                <button
+                  onClick={() => go("quote")}
+                  className="mt-2 flex items-center justify-center gap-2 rounded-sm bg-accent-red px-4 py-3 font-heading text-sm font-bold text-white"
+                >
+                  Request a Quote
+                </button>
                 <a
                   href={`tel:${BRAND.phone.replace(/[^0-9]/g, "")}`}
-                  className="mt-2 flex items-center justify-center gap-2 rounded-sm bg-accent-red px-4 py-3 font-heading text-sm font-bold text-white"
+                  className="mt-2 flex items-center justify-center gap-2 rounded-sm bg-brand px-4 py-3 font-heading text-sm font-bold text-white"
                 >
                   <Phone className="h-4 w-4" /> {BRAND.phone}
                 </a>

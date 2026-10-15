@@ -133,10 +133,10 @@ export function HomeHero({ onNavigate }: Props) {
               EXPLORE MORE
             </button>
             <button
-              onClick={() => onNavigate("contact")}
+              onClick={() => onNavigate("quote")}
               className="rounded-sm bg-accent-red px-8 py-4 font-heading text-[13px] font-bold tracking-wider text-white transition hover:bg-accent-red-dark"
             >
-              GET APPOINTMENT
+              REQUEST A QUOTE
             </button>
           </div>
 

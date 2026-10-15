@@ -1,17 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, ArrowRight } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { PageBanner, SectionHeading } from "./shared";
+import { PageBanner, SectionHeading, goToRoute } from "./shared";
 import { WorkingProcess, Counters } from "./home-extras";
 import { CtaBanner } from "./home-quote-team";
-import { SERVICES, FAQS } from "@/lib/site-data";
+import { BRAND, SERVICES, FAQS } from "@/lib/site-data";
 
 const ICONS: Record<string, React.ElementType> = {
   droplets: CheckCircle2,
@@ -72,12 +72,27 @@ export function ServicesPage() {
                       </li>
                     ))}
                   </ul>
-                  <a
-                    href="tel:4145550134"
-                    className="mt-5 inline-block font-heading text-[13px] font-bold tracking-wider text-brand transition hover:text-accent-red"
-                  >
-                    CALL FOR PRICING
-                  </a>
+                  <div className="mt-5 space-y-2">
+                    <a
+                      href="#/quote"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        goToRoute("quote");
+                      }}
+                      className="inline-flex items-center gap-2 font-heading text-[13px] font-bold tracking-wider text-brand transition hover:text-accent-red"
+                    >
+                      GET A QUOTE <ArrowRight className="h-4 w-4" />
+                    </a>
+                    <p className="text-[13px] font-semibold text-muted-ink">
+                      or{" "}
+                      <a
+                        href={`tel:${BRAND.phone.replace(/[^0-9]/g, "")}`}
+                        className="transition hover:text-brand"
+                      >
+                        call {BRAND.phone}
+                      </a>
+                    </p>
+                  </div>
                 </div>
               </motion.article>
             ))}

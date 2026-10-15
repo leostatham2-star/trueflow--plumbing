@@ -39,6 +39,31 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Contact", route: "contact" },
 ];
 
+/* Options shared by the quote page, the home quick quote form,
+   and the contact form so every request reads the same language. */
+
+export const QUOTE_SUBJECTS = [
+  "Leak Detection & Repair",
+  "Drain Cleaning",
+  "Water Heater Services",
+  "Faucet & Fixture Installation",
+  "Repiping",
+  "Sewer Line Services",
+  "24 Hour Emergency Plumbing",
+  "Something Else",
+];
+
+export const PROPERTY_TYPES = ["Residential", "Commercial"];
+
+export const QUOTE_URGENCY = [
+  "Emergency, today",
+  "Within a few days",
+  "Next week or later",
+  "Just planning ahead",
+];
+
+export const CONTACT_PREFS = ["Phone call", "Text message", "Email"];
+
 export type Service = {
   slug: string;
   title: string;

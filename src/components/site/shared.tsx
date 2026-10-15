@@ -3,6 +3,18 @@
 import { Droplets, Cog } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+/* Navigate to a hash route from any component, whether or not it
+   receives an onNavigate prop. Keeps the smooth scroll to top in
+   sync with the router in page.tsx. */
+export function goToRoute(route: string) {
+  if (typeof window === "undefined") return;
+  const target = `#/${route === "home" ? "" : route}`;
+  if (window.location.hash !== target) {
+    window.location.hash = target;
+  }
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
 export function SectionHeading({
   label,
   title,

@@ -2,19 +2,19 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, Siren } from "lucide-react";
-import { PageBanner } from "./shared";
-import { BRAND } from "@/lib/site-data";
-
-const SUBJECTS = [
-  "Leak Detection & Repair",
-  "Drain Cleaning",
-  "Water Heater Services",
-  "Faucet & Fixture Installation",
-  "Repiping",
-  "Emergency Plumbing",
-  "Something Else",
-];
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
+  Send,
+  CheckCircle2,
+  Siren,
+  ClipboardList,
+  AlertCircle,
+} from "lucide-react";
+import { PageBanner, goToRoute } from "./shared";
+import { BRAND, QUOTE_SUBJECTS } from "@/lib/site-data";
 
 const INFO = [
   {
@@ -40,14 +40,45 @@ const INFO = [
 ];
 
 export function ContactPage() {
-  const [sent, setSent] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+    company: "", // honeypot
+  });
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSent(true);
-    setForm({ name: "", email: "", phone: "", subject: "", message: "" });
-    setTimeout(() => setSent(false), 6000);
+    if (status === "sending") return;
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          service: form.subject,
+          message: form.message,
+          company: form.company,
+          source: "contact page",
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        setStatus("sent");
+        setForm({ name: "", email: "", phone: "", subject: "", message: "", company: "" });
+        setTimeout(() => setStatus("idle"), 8000);
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
   };
 
   const field =
@@ -141,7 +172,7 @@ export function ContactPage() {
                 <option value="" disabled>
                   What Do You Need?
                 </option>
-                {SUBJECTS.map((s) => (
+                {QUOTE_SUBJECTS.map((s) => (
                   <option key={s} value={s}>
                     {s}
                   </option>
@@ -156,17 +187,35 @@ export function ContactPage() {
                 aria-label="Your message"
                 className={`${field} sm:col-span-2`}
               />
+              {/* honeypot: hidden from people, irresistible to bots */}
+              <input
+                type="text"
+                name="company"
+                value={form.company}
+                onChange={(e) => setForm({ ...form, company: e.target.value })}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                className="hidden"
+              />
               <button
                 type="submit"
-                className="flex items-center justify-center gap-2 rounded-sm bg-brand px-8 py-4 font-heading text-[13px] font-bold tracking-wider text-white transition hover:bg-brand-dark sm:col-span-2"
+                disabled={status === "sending"}
+                className="flex items-center justify-center gap-2 rounded-sm bg-brand px-8 py-4 font-heading text-[13px] font-bold tracking-wider text-white transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-70 sm:col-span-2"
               >
-                SEND MESSAGE
+                {status === "sending" ? "SENDING..." : "SEND MESSAGE"}
                 <Send className="h-4 w-4" />
               </button>
-              {sent && (
+              {status === "sent" && (
                 <p className="flex items-center justify-center gap-2 text-[15px] font-semibold text-emerald-600 sm:col-span-2">
                   <CheckCircle2 className="h-5 w-5" />
                   Message received! We will call you back shortly.
+                </p>
+              )}
+              {status === "error" && (
+                <p className="flex items-center justify-center gap-2 text-[14px] font-semibold text-accent-red sm:col-span-2">
+                  <AlertCircle className="h-5 w-5" />
+                  That did not go through. Please try again, or call {BRAND.phone}.
                 </p>
               )}
             </form>
@@ -193,6 +242,26 @@ export function ContactPage() {
                   </li>
                 ))}
               </ul>
+            </div>
+
+            <div className="border border-brand/25 bg-brand-soft/50 p-8">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand text-white">
+                <ClipboardList className="h-6 w-6" />
+              </span>
+              <h3 className="mt-4 font-heading text-xl font-semibold text-ink">
+                Prefer A Written Price?
+              </h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-muted-ink">
+                If the job is planned rather than urgent, our quote form
+                collects everything our estimators need. It takes about two
+                minutes and comes with zero obligation.
+              </p>
+              <button
+                onClick={() => goToRoute("quote")}
+                className="mt-5 inline-block rounded-sm bg-brand px-7 py-3.5 font-heading text-[13px] font-bold tracking-wider text-white transition hover:bg-brand-dark"
+              >
+                REQUEST A QUOTE
+              </button>
             </div>
 
             <div className="border border-accent-red/30 bg-white p-8">

@@ -1,8 +1,9 @@
 "use client";
 
-import { ArrowUp, Facebook, Twitter, Instagram, Linkedin, MapPin, Phone, Mail, Send, CheckCircle2 } from "lucide-react";
+import { ArrowUp, Facebook, Twitter, Instagram, Linkedin, MapPin, Phone, Mail, Send, CheckCircle2, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { Logo } from "./logo";
+import { goToRoute } from "./shared";
 import { BRAND, FOOTER_SERVICES } from "@/lib/site-data";
 
 type Props = {
@@ -67,6 +68,14 @@ export function SiteFooter({ onNavigate }: Props) {
                   </button>
                 </li>
               ))}
+              <li className="pt-1">
+                <button
+                  onClick={() => goToRoute("quote")}
+                  className="inline-flex items-center gap-1.5 font-heading text-[14px] font-bold text-brand transition hover:text-white"
+                >
+                  Request a Free Quote <ArrowRight className="h-4 w-4" />
+                </button>
+              </li>
             </ul>
           </nav>
 

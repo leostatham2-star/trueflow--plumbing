@@ -26,10 +26,11 @@ import {
 import { AboutPage } from "@/components/site/about-page";
 import { ServicesPage } from "@/components/site/services-page";
 import { ContactPage } from "@/components/site/contact-page";
+import { QuotePage } from "@/components/site/quote-page";
 
-type Route = "home" | "about" | "services" | "contact";
+type Route = "home" | "about" | "services" | "contact" | "quote";
 
-const ROUTES: Route[] = ["home", "about", "services", "contact"];
+const ROUTES: Route[] = ["home", "about", "services", "contact", "quote"];
 
 function parseHash(h: string): Route {
   const clean = h.replace(/^#\/?/, "").toLowerCase();
@@ -101,6 +102,7 @@ export default function Page() {
             {route === "about" && <AboutPage />}
             {route === "services" && <ServicesPage />}
             {route === "contact" && <ContactPage />}
+            {route === "quote" && <QuotePage />}
           </motion.div>
         </AnimatePresence>
       </main>
